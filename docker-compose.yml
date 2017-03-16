@@ -1,0 +1,28 @@
+mysql:
+  image: mysql/mysql-server:5.6
+  ports: 
+    - "3306"
+  volumes: 
+    - "./mysql:/var/lib/mysql"
+  environment:
+    - MYSQL_ROOT_PASSWORD=db123456
+nginx:
+  image: nginx:latest
+  ports:
+      - "10080:80"
+      #- "443:443"
+  volumes: 
+    - "./source/vm_sys:/webdata/vm_sys"
+  links:
+      - fpm:hy.local.fpm
+
+fpm:
+  # build: ./dockerfiles/php_fpm
+  image: php
+  ports:
+    - "9000"
+  volumes:
+    - "./source/vm_sys:/webdata/vm_sys"
+  links:
+    - mysql:hy.local.mysql
+
